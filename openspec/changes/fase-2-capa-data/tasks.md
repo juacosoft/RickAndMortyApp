@@ -62,4 +62,4 @@
 
 ## 11. Commit
 
-- [ ] 11.1 Semantic commit: `feat: implement data layer with Ktor remote datasource and character repository`
+- [x] 11.1 Semantic commit: `feat: implement data layer with Ktor remote datasource and character repository`
