@@ -32,10 +32,10 @@
 
 ## 6. Pruebas Manuales
 
-- [ ] 6.1 Hacer gradle sync en Android Studio → sin errores de resolución de dependencias
-- [ ] 6.2 Verificar que la app instala y abre correctamente en emulador/dispositivo
-- [ ] 6.3 Confirmar que los paquetes `data`, `domain`, `di`, `presentation`, `commons` son visibles en la vista de proyecto de Android Studio
+- [x] 6.1 Hacer gradle sync en Android Studio → sin errores de resolución de dependencias
+- [x] 6.2 Verificar que la app instala y abre correctamente en emulador/dispositivo
+- [x] 6.3 Confirmar que los paquetes `data`, `domain`, `di`, `presentation`, `commons` son visibles en la vista de proyecto de Android Studio
 
 ## 7. Commit
 
-- [ ] 7.1 Semantic commit: `build: setup dependencies and clean architecture package structure`
+- [x] 7.1 Semantic commit: `build: setup dependencies and clean architecture package structure`
