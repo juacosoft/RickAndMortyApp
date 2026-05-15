@@ -16,8 +16,8 @@
 
 ## 4. Pruebas Manuales
 
-- [ ] 4.1 Gradle sync en Android Studio → sin errores
+- [x] 4.1 Gradle sync en Android Studio → sin errores
 
 ## 5. Commit
 
-- [ ] 5.1 Semantic commit: `feat: add GetCharactersUseCase in domain layer`
+- [x] 5.1 Semantic commit: `feat: add GetCharactersUseCase in domain layer`
