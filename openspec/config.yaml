@@ -1,0 +1,89 @@
+schema: spec-driven
+
+context: |
+  # Proyecto
+  RickAndMortyApp - Aplicación Android que consume la API pública de Rick and Morty.
+
+  ## API
+  - Base URL: https://rickandmortyapi.com/api
+  - Endpoint principal: GET /character
+  - Ejemplo: https://rickandmortyapi.com/api/character
+  - La API expone paginación nativa (info.next / info.prev / results).
+
+  ## Stack tecnológico
+  - Lenguaje: Kotlin
+  - Android: minSdk 24, targetSdk/compileSdk 36
+  - Arquitectura: Clean Architecture (capas: data, domain, presentation, di, commons)
+  - Patrón de presentación: MVI con ViewModels de Android (AAC ViewModel)
+  - UI: Jetpack Compose
+  - Navegación: Navigation Component para Compose (androidx.navigation:navigation-compose)
+  - Inyección de dependencias: Hilt
+  - Asincronía: Coroutines + StateFlow + SharedFlow
+  - Networking: Ktor Client (consumo de API)
+  - Serialización: kotlinx.serialization
+  - Logging: Ktor Logging plugin -> Logcat (nivel ALL en debug)
+  - Imágenes y caché: Coil (coil-compose)
+  - Testing unitario: JUnit4 + MockK + Turbine (para StateFlow/SharedFlow)
+
+  ## Lineamientos de arquitectura y código
+  - Clean Code obligatorio. Sin comentarios de documentación en el código.
+  - Capa Repository es la única vía de comunicación entre data y domain.
+  - Toda la lógica de negocio debe estar testeada con pruebas unitarias.
+  - Prohibido tener lógica de negocio en vistas o composables. Toda lógica vive en ViewModels o UseCases.
+  - Inversión de dependencias: inyectar abstracciones (interfaces) en data y domain.
+  - UseCases NO requieren interfaz/abstracción; usar solo `@Inject constructor()`.
+  - Crear clase base de UseCase únicamente si se necesita reutilizar lógica común.
+  - Mapeo data <-> domain mediante funciones de extensión `.toDomain()` / `.toData()`.
+  - Si el mapeo es complejo y requiere lógica testeable, usar clases `Mapper` dedicadas (con tests).
+  - Solo usar librerías externas estrictamente necesarias; preferir oficiales de Android / recomendadas por Google.
+  - Identación de variables y funciones acorde a la funcionalidad (agrupación lógica, no por tipo).
+  - NO documentar código con comentarios.
+
+  ## Contrato MVI para ViewModels
+  Cada ViewModel implementa una interfaz `MVIContract` con tres tipos:
+  - `UiState`: estado inmutable de la pantalla, expuesto como StateFlow.
+  - `UiEvent`: intenciones / acciones que la UI envía al ViewModel.
+  - `Effect`: efectos one-shot (navegación, snackbars, etc.) expuestos como SharedFlow.
+
+  ## Convenciones de Git
+  - Semantic commits (feat, fix, chore, refactor, test, docs, build, ci).
+  - Solo hacer commit o push cuando las pruebas manuales de la spec estén completadas.
+
+  ## Cambios de alto impacto
+  Todo cambio de alto impacto (stack, arquitectura, lineamientos, librerías core)
+  debe registrarse en este archivo `openspec/config.yaml`.
+
+  ## Fases de desarrollo
+  - Fase 1: Agregar dependencias y plugins necesarios (Hilt, Ktor, kotlinx.serialization,
+    Navigation Compose, Coil, MockK, Turbine). Crear estructura de capas:
+    `data/`, `domain/`, `di/`, `presentation/`, `commons/`.
+  - Fase 2: Capa data: datasources remotos, service/api (Ktor), DTOs, mappers,
+    implementación de repositorios y módulos Hilt de data.
+  - Fase 3: Capa domain: entidades, interfaces de repositorio, usecases.
+  - Fase 4: Capa presentation: theme, navegación, componentes transversales
+    (appbar, lazy list, loaders, error views) en `presentation/components`.
+  - Fase 5: Pantalla Characters
+    - Cada item muestra: imagen, nombre, estado (Alive / Dead / Unknown).
+    - Paginación con infinity scroll optimizado.
+    - Big loader para la carga inicial (primera página).
+    - Bottom loader para cargas de paginación.
+    - Manejo de errores con retry para la página inicial y para fallos de paginación.
+    - Placeholder mientras cargan las imágenes y vista de error si la imagen falla.
+    - Recarga por scroll protegida contra doble llamado.
+    - Pull to refresh desde la UI.
+
+  ## Next steps (fuera del alcance inicial)
+  - Pantalla de detalle de Character.
+  - Cacheo local (persistencia) de personajes.
+  - Visualización de imágenes en pantalla completa.
+
+rules:
+  proposal:
+    - Especificar capa afectada (data, domain, presentation, di, commons).
+    - Listar nuevas dependencias y justificar por qué son necesarias.
+    - Declarar el contrato MVI (UiState, UiEvent, Effect) si la spec toca presentation.
+  tasks:
+    - Incluir SIEMPRE como tarea global "Pruebas manuales en dispositivo/emulador" antes de commit/push.
+    - Incluir SIEMPRE como tarea global "Tests unitarios para toda lógica de negocio" (ViewModels, UseCases, Repositories, Mappers complejos).
+    - No marcar la spec como completada hasta que las pruebas manuales pasen.
+    - Usar semantic commits al cerrar tareas.
