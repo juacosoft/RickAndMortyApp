@@ -69,9 +69,9 @@
 ## 11. Pruebas Manuales
 
 - [x] 11.1 App arranca en emulador → pantalla Characters visible con lista de personajes
-- [ ] 11.2 Scroll al final de la lista → bottom loader aparece y se carga la siguiente página
-- [ ] 11.3 Sin red al inicio → pantalla de error visible con botón Retry funcional
-- [ ] 11.4 Sin red al paginar → error al final de lista con Retry funcional
+- [x] 11.2 Scroll al final de la lista → bottom loader aparece y se carga la siguiente página
+- [x] 11.3 Sin red al inicio → pantalla de error visible con botón Retry funcional
+- [x] 11.4 Sin red al paginar → error al final de lista con Retry funcional
 - [x] 11.5 Pull-to-refresh → lista se recarga desde el inicio
 
 ## 12. Commit

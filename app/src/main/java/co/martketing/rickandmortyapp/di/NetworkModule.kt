@@ -23,6 +23,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideHttpClient(): HttpClient = HttpClient(Android) {
+        expectSuccess = true
         install(ContentNegotiation) {
             json(Json {
                 ignoreUnknownKeys = true

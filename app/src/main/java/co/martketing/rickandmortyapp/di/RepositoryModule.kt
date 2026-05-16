@@ -10,11 +10,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
+interface RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindCharacterRepository(
-        impl: CharacterRepositoryImpl
-    ): CharacterRepository
+    fun bindCharacterRepository(impl: CharacterRepositoryImpl): CharacterRepository
 }

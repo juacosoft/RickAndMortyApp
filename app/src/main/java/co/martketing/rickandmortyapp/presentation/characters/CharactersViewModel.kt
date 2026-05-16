@@ -42,6 +42,7 @@ class CharactersViewModel @Inject constructor(
     private fun onLoadNextPage() {
         val state = _uiState.value
         if (state.isLoading || state.isLoadingMore || state.isRefreshing || !state.hasNextPage) return
+        _uiState.update { it.copy(isLoadingMore = true, paginationError = null) }
         loadPage(state.currentPage + 1)
     }
 
@@ -70,8 +71,6 @@ class CharactersViewModel @Inject constructor(
             val current = _uiState.value
             if (page == 1 && current.characters.isEmpty() && !current.isRefreshing) {
                 _uiState.update { it.copy(isLoading = true, error = null) }
-            } else if (page > 1) {
-                _uiState.update { it.copy(isLoadingMore = true, paginationError = null) }
             }
 
             getCharactersUseCase(page)
