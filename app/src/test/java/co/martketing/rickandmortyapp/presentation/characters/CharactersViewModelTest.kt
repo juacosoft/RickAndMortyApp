@@ -180,7 +180,7 @@ class CharactersViewModelTest {
     }
 
     @Test
-    fun `Refresh clears list and reloads from page 1`() = runTest {
+    fun `Refresh keeps existing characters visible during load and replaces on success`() = runTest {
         coEvery { useCase(1) } returns Result.success(samplePage1)
         coEvery { useCase(2) } returns Result.success(samplePage2)
 
@@ -194,11 +194,35 @@ class CharactersViewModelTest {
 
         coEvery { useCase(1) } returns Result.success(samplePage1)
         viewModel.onEvent(CharactersUiEvent.Refresh)
+
+        // Characters remain visible while refreshing, isRefreshing is true
+        assertTrue(viewModel.uiState.value.isRefreshing)
+        assertEquals(2, viewModel.uiState.value.characters.size)
+
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
+        assertFalse(state.isRefreshing)
         assertEquals(samplePage1.characters, state.characters)
         assertEquals(1, state.currentPage)
         assertNull(state.error)
+    }
+
+    @Test
+    fun `Refresh sets isRefreshing false on failure and preserves existing list`() = runTest {
+        coEvery { useCase(1) } returns Result.success(samplePage1)
+
+        viewModel = CharactersViewModel(useCase)
+        advanceUntilIdle()
+
+        val exception = RuntimeException("Network error")
+        coEvery { useCase(1) } returns Result.failure(exception)
+
+        viewModel.onEvent(CharactersUiEvent.Refresh)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.isRefreshing)
+        assertNotNull(state.error)
     }
 }

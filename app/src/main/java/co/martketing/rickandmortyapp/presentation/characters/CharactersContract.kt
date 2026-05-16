@@ -5,6 +5,7 @@ import co.martketing.rickandmortyapp.domain.model.Character
 data class CharactersUiState(
     val characters: List<Character> = emptyList(),
     val isLoading: Boolean = true,
+    val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
     val error: String? = null,
     val paginationError: String? = null,

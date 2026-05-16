@@ -51,7 +51,7 @@ fun CharactersScreen(
         topBar = { RickAndMortyTopBar(title = "Characters") }
     ) { innerPadding ->
         PullToRefreshBox(
-            isRefreshing = state.isLoading && state.characters.isNotEmpty(),
+            isRefreshing = state.isRefreshing,
             onRefresh = { viewModel.onEvent(CharactersUiEvent.Refresh) },
             modifier = Modifier
                 .fillMaxSize()

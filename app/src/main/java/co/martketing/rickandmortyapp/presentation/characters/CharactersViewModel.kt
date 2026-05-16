@@ -35,13 +35,13 @@ class CharactersViewModel @Inject constructor(
             is CharactersUiEvent.LoadNextPage -> onLoadNextPage()
             is CharactersUiEvent.RetryInitial -> onRetryInitial()
             is CharactersUiEvent.RetryPagination -> onRetryPagination()
-            is CharactersUiEvent.Refresh -> onRetryInitial()
+            is CharactersUiEvent.Refresh -> onRefresh()
         }
     }
 
     private fun onLoadNextPage() {
         val state = _uiState.value
-        if (state.isLoading || state.isLoadingMore || !state.hasNextPage) return
+        if (state.isLoading || state.isLoadingMore || state.isRefreshing || !state.hasNextPage) return
         loadPage(state.currentPage + 1)
     }
 
@@ -49,6 +49,12 @@ class CharactersViewModel @Inject constructor(
         _uiState.update {
             CharactersUiState(isLoading = true)
         }
+        loadPage(1)
+    }
+
+    private fun onRefresh() {
+        if (_uiState.value.isRefreshing || _uiState.value.isLoading) return
+        _uiState.update { it.copy(isRefreshing = true, error = null, paginationError = null) }
         loadPage(1)
     }
 
@@ -61,7 +67,8 @@ class CharactersViewModel @Inject constructor(
 
     private fun loadPage(page: Int) {
         viewModelScope.launch {
-            if (page == 1 && _uiState.value.characters.isEmpty()) {
+            val current = _uiState.value
+            if (page == 1 && current.characters.isEmpty() && !current.isRefreshing) {
                 _uiState.update { it.copy(isLoading = true, error = null) }
             } else if (page > 1) {
                 _uiState.update { it.copy(isLoadingMore = true, paginationError = null) }
@@ -72,8 +79,9 @@ class CharactersViewModel @Inject constructor(
                     _uiState.update { state ->
                         state.copy(
                             characters = if (page == 1) characterPage.characters
-                                        else state.characters + characterPage.characters,
+                                         else state.characters + characterPage.characters,
                             isLoading = false,
+                            isRefreshing = false,
                             isLoadingMore = false,
                             hasNextPage = characterPage.hasNextPage,
                             currentPage = page,
@@ -87,6 +95,7 @@ class CharactersViewModel @Inject constructor(
                         _uiState.update { state ->
                             state.copy(
                                 isLoading = false,
+                                isRefreshing = false,
                                 isLoadingMore = false,
                                 error = throwable.message ?: "Unknown error"
                             )
