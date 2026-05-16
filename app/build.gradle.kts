@@ -66,7 +66,6 @@ dependencies {
     implementation(libs.navigation.compose)
 
     implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
