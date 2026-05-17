@@ -130,7 +130,13 @@ La API expone paginación nativa mediante `info.next` / `info.prev` / `results`.
 
 -----
 
+## 🤖 Inteligencia artificial
+- Github copilot CLI
+- Spec-driven Development
+- [Openspec framworks](https://openspec.dev)
+
 ## 📄 Licencia
+
 
 ```
 MIT License — libre de usar, modificar y distribuir.
